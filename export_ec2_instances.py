@@ -9,7 +9,11 @@ def get_all_ec2_instances():
     all_instances = [] # Variable where the EC2 details will be added
 
     for instance in ec2.instances.all():
+        for tag in instance.tags: # Get the friendly name of the instance
+            if 'Name' in tag['Key']:
+                instance_name = tag['Value']
         instance_details = {
+            "Instance_name" : instance_name,
             "Instance_id" : instance.id, 
             "Ami_id" : instance.image_id,
             "Public IP" : instance.public_ip_address,
@@ -18,17 +22,18 @@ def get_all_ec2_instances():
             "AWS Account" : current_account_id
             }
         all_instances.append(instance_details) 
-
     return all_instances
 
 def get_account_id():
     # This function is used to get the AWS Account that is currently in use.
+    
     client = boto3.client("sts")
     return client.get_caller_identity()["Account"]
 
 def export_instances_to_csv(instances):
-
-    csv_columns = ["Instance_id", "Ami_id", "Public IP", "Private IP", "State", "AWS Account"]
+    # This function takes a list of ec2 instances and iterates through to export to a csv file. 
+    
+    csv_columns = ["Instance_name", "Instance_id", "Ami_id", "Public IP", "Private IP", "State", "AWS Account"]
     csv_file = "EC2_Instances.csv"
     try:
         with open(csv_file, 'w', newline='') as csvfile:
@@ -40,10 +45,13 @@ def export_instances_to_csv(instances):
         print("IOError")
 
 def main():
-    boto3.setup_default_session(profile_name='INSERT_YOUR_PROFILE')
+    
+    boto3.setup_default_session(profile_name='INSERT YOUR ACCOUNT')
     instances = get_all_ec2_instances()
     export_instances_to_csv(instances)
 
+    prod_accounts = ['94104989819', '321185621023', '7509192768', '140868046438']
+    non_prod_accounts = ['162597684527', '250364696126', '486813556838', '838776967954']
+
 if __name__ == "__main__":
     main()
-   
