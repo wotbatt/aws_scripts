@@ -50,8 +50,5 @@ def main():
     instances = get_all_ec2_instances()
     export_instances_to_csv(instances)
 
-    prod_accounts = ['94104989819', '321185621023', '7509192768', '140868046438']
-    non_prod_accounts = ['162597684527', '250364696126', '486813556838', '838776967954']
-
 if __name__ == "__main__":
     main()
