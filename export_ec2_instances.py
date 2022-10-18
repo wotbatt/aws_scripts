@@ -40,7 +40,7 @@ def export_instances_to_csv(instances):
         print("IOError")
 
 def main():
-    boto3.setup_default_session(profile_name='temp_ops_sbox')
+    boto3.setup_default_session(profile_name='INSERT_YOUR_PROFILE')
     instances = get_all_ec2_instances()
     export_instances_to_csv(instances)
 
